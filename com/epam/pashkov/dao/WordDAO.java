@@ -34,7 +34,7 @@ public class WordDAO implements InterfaceDAO<Word> {
                     id = rs.getInt(1);
                 }
 
-                rs = statement.executeQuery("SELECT * FROM EnglishVocabulary WHERE "+id+"=EnglishVocabulary.id_rus");
+                rs = statement.executeQuery("SELECT * FROM EnglishVocabulary WHERE EnglishVocabulary.id_rus="+id);
             }
             else{
                 int id = 0;
@@ -43,7 +43,7 @@ public class WordDAO implements InterfaceDAO<Word> {
                     id = rs.getInt(1);
                 }
 
-                rs = statement.executeQuery("SELECT * FROM RussianVocabulary WHERE "+id+"=RussianVocabulary.id_eng");
+                rs = statement.executeQuery("SELECT * FROM RussianVocabulary WHERE RussianVocabulary.id_eng="+id);
             }
             while(rs.next()){
                 int idDB = rs.getInt(1);
@@ -54,6 +54,15 @@ public class WordDAO implements InterfaceDAO<Word> {
 
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("SQL Exeption (request or table failed):"+e);
+        }
+
+        finally{
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return words;
@@ -83,6 +92,14 @@ public class WordDAO implements InterfaceDAO<Word> {
             System.err.println("SQL Exeption (request or table failed):"+e);
         }
 
+        finally{
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
         return words;
     }
@@ -107,6 +124,15 @@ public class WordDAO implements InterfaceDAO<Word> {
 
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("SQL Exeption (request or table failed):"+e);
+        }
+
+        finally{
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return word;
