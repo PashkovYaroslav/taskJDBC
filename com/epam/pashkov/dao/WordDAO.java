@@ -27,41 +27,38 @@ public class WordDAO implements InterfaceDAO<Word> {
             connection = ConnectorDB.getConnection();
             statement = (Statement) connection.createStatement();
             ResultSet rs;
-            if(vocabulary) {
+            if (vocabulary) {
                 int id = 0;
-                rs = statement.executeQuery("SELECT id_rus FROM RussianVocabulary WHERE word='"+word+"'");
-                while(rs.next()){
+                rs = statement.executeQuery("SELECT id_rus FROM RussianVocabulary WHERE word='" + word + "'");
+                while (rs.next()) {
                     id = rs.getInt(1);
                 }
 
-                rs = statement.executeQuery("SELECT * FROM EnglishVocabulary WHERE EnglishVocabulary.id_rus="+id);
-            }
-            else{
+                rs = statement.executeQuery("SELECT * FROM EnglishVocabulary WHERE EnglishVocabulary.id_rus=" + id);
+            } else {
                 int id = 0;
-                rs = statement.executeQuery("SELECT id_eng FROM EnglishVocabulary WHERE word='"+word+"'");
-                while(rs.next()){
+                rs = statement.executeQuery("SELECT id_eng FROM EnglishVocabulary WHERE word='" + word + "'");
+                while (rs.next()) {
                     id = rs.getInt(1);
                 }
 
-                rs = statement.executeQuery("SELECT * FROM RussianVocabulary WHERE RussianVocabulary.id_eng="+id);
+                rs = statement.executeQuery("SELECT * FROM RussianVocabulary WHERE RussianVocabulary.id_eng=" + id);
             }
-            while(rs.next()){
+            while (rs.next()) {
                 int idDB = rs.getInt(1);
                 String wordDB = rs.getString(2);
                 int foreignKeyDB = rs.getInt(3);
-                words.add(new Word(idDB,wordDB,foreignKeyDB));
+                words.add(new Word(idDB, wordDB, foreignKeyDB));
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("SQL Exeption (request or table failed):"+e);
-        }
-
-        finally{
+            System.err.println("SQL Exeption (request or table failed):" + e);
+        } finally {
             try {
-                if(statement!=null) {
+                if (statement != null) {
                     statement.close();
                 }
-                if(connection!=null) {
+                if (connection != null) {
                     connection.close();
                 }
             } catch (SQLException e) {
@@ -84,24 +81,22 @@ public class WordDAO implements InterfaceDAO<Word> {
         try {
             connection = ConnectorDB.getConnection();
             statement = (Statement) connection.createStatement();
-            ResultSet rs= statement.executeQuery("SELECT * FROM "+vocabularyStr);
-            while(rs.next()){
+            ResultSet rs = statement.executeQuery("SELECT * FROM " + vocabularyStr);
+            while (rs.next()) {
                 int id = rs.getInt(1);
                 String word = rs.getString(2);
                 int foreignKey = rs.getInt(3);
-                words.add(new Word(id,word,foreignKey));
+                words.add(new Word(id, word, foreignKey));
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("SQL Exeption (request or table failed):"+e);
-        }
-
-        finally{
+            System.err.println("SQL Exeption (request or table failed):" + e);
+        } finally {
             try {
-                if(statement!=null) {
+                if (statement != null) {
                     statement.close();
                 }
-                if(connection!=null) {
+                if (connection != null) {
                     connection.close();
                 }
             } catch (SQLException e) {
@@ -122,24 +117,20 @@ public class WordDAO implements InterfaceDAO<Word> {
         try {
             connection = ConnectorDB.getConnection();
             statement = (Statement) connection.createStatement();
-            if(vocabulary) {
-                statement.executeUpdate("UPDATE ENGLISHVOCABULARY SET word='"+word.getTextOfWord()+"', id_rus='"+word.getForeignKey()+"' WHERE id_eng="+word.getId());
-            }
-
-            else {
-                statement.executeUpdate("UPDATE RUSSIANVOCABULARY SET word='"+word.getTextOfWord()+"', id_eng='"+word.getForeignKey()+"' WHERE id_rus="+word.getId());
+            if (vocabulary) {
+                statement.executeUpdate("UPDATE ENGLISHVOCABULARY SET word='" + word.getTextOfWord() + "', id_rus='" + word.getForeignKey() + "' WHERE id_eng=" + word.getId());
+            } else {
+                statement.executeUpdate("UPDATE RUSSIANVOCABULARY SET word='" + word.getTextOfWord() + "', id_eng='" + word.getForeignKey() + "' WHERE id_rus=" + word.getId());
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("SQL Exeption (request or table failed):"+e);
-        }
-
-        finally{
+            System.err.println("SQL Exeption (request or table failed):" + e);
+        } finally {
             try {
-                if(statement!=null) {
+                if (statement != null) {
                     statement.close();
                 }
-                if(connection!=null) {
+                if (connection != null) {
                     connection.close();
                 }
             } catch (SQLException e) {
