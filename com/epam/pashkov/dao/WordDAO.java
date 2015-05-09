@@ -58,8 +58,12 @@ public class WordDAO implements InterfaceDAO<Word> {
 
         finally{
             try {
-                statement.close();
-                connection.close();
+                if(statement!=null) {
+                    statement.close();
+                }
+                if(connection!=null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -94,8 +98,12 @@ public class WordDAO implements InterfaceDAO<Word> {
 
         finally{
             try {
-                statement.close();
-                connection.close();
+                if(statement!=null) {
+                    statement.close();
+                }
+                if(connection!=null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -128,8 +136,12 @@ public class WordDAO implements InterfaceDAO<Word> {
 
         finally{
             try {
-                statement.close();
-                connection.close();
+                if(statement!=null) {
+                    statement.close();
+                }
+                if(connection!=null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
