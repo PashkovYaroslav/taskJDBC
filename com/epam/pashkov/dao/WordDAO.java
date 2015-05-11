@@ -2,6 +2,7 @@ package com.epam.pashkov.dao;
 
 import com.epam.pashkov.ConnectorDB;
 import com.epam.pashkov.Word;
+import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
 import java.sql.Connection;
@@ -21,28 +22,35 @@ public class WordDAO implements InterfaceDAO<Word> {
         List<Word> words = new ArrayList<Word>();
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
 
         try {
             connection = ConnectorDB.getConnection();
-            statement = (Statement) connection.createStatement();
+
             ResultSet rs;
             if (vocabulary) {
                 int id = 0;
-                rs = statement.executeQuery("SELECT id_rus FROM RussianVocabulary WHERE word='" + word + "'");
+                preparedStatement = (PreparedStatement) connection.prepareStatement("SELECT id_rus FROM RussianVocabulary WHERE word=?");
+                preparedStatement.setString(1,word);
+                rs = preparedStatement.executeQuery();
                 while (rs.next()) {
                     id = rs.getInt(1);
                 }
+                preparedStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM EnglishVocabulary WHERE EnglishVocabulary.id_rus=?");
+                preparedStatement.setInt(1,id);
+                rs = preparedStatement.executeQuery();
 
-                rs = statement.executeQuery("SELECT * FROM EnglishVocabulary WHERE EnglishVocabulary.id_rus=" + id);
             } else {
                 int id = 0;
-                rs = statement.executeQuery("SELECT id_eng FROM EnglishVocabulary WHERE word='" + word + "'");
+                preparedStatement = (PreparedStatement) connection.prepareStatement("SELECT id_eng FROM EnglishVocabulary WHERE word=?");
+                preparedStatement.setString(1,word);
+                rs = preparedStatement.executeQuery();
                 while (rs.next()) {
                     id = rs.getInt(1);
                 }
-
-                rs = statement.executeQuery("SELECT * FROM RussianVocabulary WHERE RussianVocabulary.id_eng=" + id);
+                preparedStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM RussianVocabulary WHERE RussianVocabulary.id_eng=?");
+                preparedStatement.setInt(1, id);
+                rs = preparedStatement.executeQuery();
             }
             while (rs.next()) {
                 int idDB = rs.getInt(1);
@@ -55,8 +63,8 @@ public class WordDAO implements InterfaceDAO<Word> {
             System.err.println("SQL Exeption (request or table failed):" + e);
         } finally {
             try {
-                if (statement != null) {
-                    statement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
                 }
                 if (connection != null) {
                     connection.close();
